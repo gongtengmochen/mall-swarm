@@ -9,3 +9,12 @@ target/
 .settings/
 .classpath
 .project
+
+# Docker 数据目录
+document/docker/mydata/
+*.sock
+*.log
+*.pid
+*.lock
+WiredTiger
+*.db

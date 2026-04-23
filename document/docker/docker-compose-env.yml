@@ -46,6 +46,9 @@ services:
       - "cluster.name=elasticsearch"
       - "discovery.type=single-node"
       - "ES_JAVA_OPTS=-Xms512m -Xmx1024m"
+      - "cluster.name=elasticsearch"
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx1024m"
     volumes:
       - ./mydata/elasticsearch/plugins:/usr/share/elasticsearch/plugins
       - ./mydata/elasticsearch/data:/usr/share/elasticsearch/data
@@ -62,7 +65,9 @@ services:
       - ./mydata/logstash/log:/usr/share/logstash/logs
     depends_on:
       - elasticsearch
+      - elasticsearch
     links:
+      - elasticsearch:es
       - elasticsearch:es
     ports:
       - 4560:4560
@@ -76,9 +81,12 @@ services:
       - ./mydata/kibana/log:/usr/share/kibana/logs
     links:
       - elasticsearch:es
+      - elasticsearch:es
     depends_on:
       - elasticsearch
+      - elasticsearch
     environment:
+      - "elasticsearch.hosts=http://es:9200"
       - "elasticsearch.hosts=http://es:9200"
     ports:
       - 5601:5601

@@ -26,6 +26,8 @@ services:
     image: nginx:1.22
     container_name: nginx
     volumes:
+      - ./mydata/nginx/html:/usr/share/nginx/html
+      - ./mydata/nginx/conf:/etc/nginx/conf.d
       - ./mydata/nginx/log:/var/log/nginx
     ports:
       - 81:80
@@ -59,6 +61,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
+      - ./mydata/logstash/data:/usr/share/logstash/data
       - ./mydata/logstash/log:/usr/share/logstash/logs
     depends_on:
       - elasticsearch
@@ -73,6 +76,7 @@ services:
     image: kibana:7.17.3
     container_name: kibana
     volumes:
+      - ./mydata/kibana/data:/usr/share/kibana/data
       - ./mydata/kibana/log:/usr/share/kibana/logs
     links:
       - elasticsearch:es
@@ -96,6 +100,7 @@ services:
     environment:
       - "MODE=standalone"
     volumes:
+      - ./mydata/nacos/data:/home/nacos/data
       - ./mydata/nacos/log:/home/nacos/logs
     ports:
       - 8848:8848

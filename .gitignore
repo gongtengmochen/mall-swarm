@@ -9,3 +9,12 @@ target/
 .settings/
 .classpath
 .project
+
+# Docker 中间件挂载数据
+# 1. 先忽略整个 mydata 目录（黑名单）
+document/docker/mydata/
+
+# 2. 再放行需要提交的配置文件（白名单，! 代表「不忽略」）
+!document/docker/mydata/logstash/logstash.conf
+!document/docker/mydata/nginx/nginx.conf
+!document/docker/mydata/elasticsearch/.gitkeep

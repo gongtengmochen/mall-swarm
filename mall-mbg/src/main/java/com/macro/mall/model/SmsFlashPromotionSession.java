@@ -23,6 +23,10 @@ public class SmsFlashPromotionSession implements Serializable {
     @Schema(title = "创建时间")
     private Date createTime;
 
+    // 关联的秒杀活动ID（不映射数据库字段，仅用于前端展示）
+    @Schema(title = "秒杀活动ID", hidden = true)
+    private Long flashPromotionId;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -71,6 +75,14 @@ public class SmsFlashPromotionSession implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Long getFlashPromotionId() {
+        return flashPromotionId;
+    }
+
+    public void setFlashPromotionId(Long flashPromotionId) {
+        this.flashPromotionId = flashPromotionId;
     }
 
     @Override

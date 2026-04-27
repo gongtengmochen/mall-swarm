@@ -104,3 +104,5 @@ services:
       - ./mydata/nacos/log:/home/nacos/logs
     ports:
       - 8848:8848
+      - 9848:9848
+      - 9849:9849

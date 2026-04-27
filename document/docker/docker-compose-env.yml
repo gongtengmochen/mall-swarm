@@ -1,7 +1,7 @@
 version: '3'
 services:
   mysql:
-    image: mysql:5.7
+    image: hub.rat.dev/library/mysql:5.7
     container_name: mysql
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     restart: always
@@ -14,7 +14,7 @@ services:
       - ./mydata/mysql/data/conf:/etc/mysql/conf.d
       - ./mydata/mysql/log:/var/log/mysql
   redis:
-    image: redis:7
+    image: hub.rat.dev/library/redis:7
     container_name: redis
     command: redis-server --appendonly yes
     volumes:
@@ -23,7 +23,7 @@ services:
     ports:
       - 6379:6379
   nginx:
-    image: nginx:1.22
+    image: hub.rat.dev/library/nginx:1.22
     container_name: nginx
     volumes:
       - ./mydata/nginx/html:/usr/share/nginx/html
@@ -32,7 +32,7 @@ services:
     ports:
       - 81:80
   rabbitmq:
-    image: rabbitmq:3.9.11-management
+    image: hub.rat.dev/library/rabbitmq:3.9.11-management
     container_name: rabbitmq
     volumes:
       - ./mydata/rabbitmq/data:/var/lib/rabbitmq
@@ -41,7 +41,7 @@ services:
       - 5672:5672
       - 15672:15672
   elasticsearch:
-    image: elasticsearch:7.17.3
+    image: hub.rat.dev/library/elasticsearch:7.17.3
     container_name: elasticsearch
     user: root
     environment:
@@ -56,13 +56,14 @@ services:
       - 9200:9200
       - 9300:9300
   logstash:
-    image: logstash:7.17.3
+    image: hub.rat.dev/library/logstash:7.17.3
     container_name: logstash
     environment:
       - TZ=Asia/Shanghai
     volumes:
       - ./mydata/logstash/data:/usr/share/logstash/data
       - ./mydata/logstash/log:/usr/share/logstash/logs
+      - ./mydata/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf #挂载logstash的配置文件
     depends_on:
       - elasticsearch
     links:
@@ -73,7 +74,7 @@ services:
       - 4562:4562
       - 4563:4563
   kibana:
-    image: kibana:7.17.3
+    image: hub.rat.dev/library/kibana:7.17.3
     container_name: kibana
     volumes:
       - ./mydata/kibana/data:/usr/share/kibana/data
@@ -87,7 +88,7 @@ services:
     ports:
       - 5601:5601
   mongo:
-    image: mongo:4
+    image: hub.rat.dev/library/mongo:4
     container_name: mongo
     volumes:
       - ./mydata/mongo/db:/data/db
@@ -95,7 +96,7 @@ services:
     ports:
       - 27017:27017
   nacos-registry:
-    image: nacos/nacos-server:v2.1.0
+    image: hub.rat.dev/nacos/nacos-server:v2.1.0
     container_name: nacos-registry
     environment:
       - "MODE=standalone"

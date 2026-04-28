@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mall-ai
+  labels:
+    app: mall-ai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mall-ai
+  template:
+    metadata:
+      labels:
+        app: mall-ai
+    spec:
+      containers:
+        - name: mall-ai
+          image: mall/mall-ai:1.0-SNAPSHOT
+          ports:
+            - containerPort: 8402
+          env:
+            - name: SPRING_CLOUD_NACOS_DISCOVERY_SERVER-ADDR
+              value: "nacos-registry:8848"
+            - name: SPRING_CLOUD_NACOS_CONFIG_SERVER-ADDR
+              value: "nacos-registry:8848"
+            - name: DASHSCOPE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mall-ai-secret
+                  key: dashscope-api-key
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8402
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8402
+            initialDelaySeconds: 30
+            periodSeconds: 5

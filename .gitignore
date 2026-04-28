@@ -18,3 +18,10 @@ document/docker/mydata/
 !document/docker/mydata/logstash/logstash.conf
 !document/docker/mydata/nginx/nginx.conf
 !document/docker/mydata/elasticsearch/.gitkeep
+
+# 敏感配置文件（包含 API Key 等）
+application-local.yml
+.env
+*.key
+*.pem
+*.secret

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.macro.mall.ai.mapper.ProductKnowledgeMapper">
+
+    <resultMap id="ProductInfoResultMap" type="com.macro.mall.ai.domain.ProductInfoDTO">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="subTitle" column="sub_title"/>
+        <result property="price" column="price"/>
+        <result property="promotionPrice" column="promotion_price"/>
+        <result property="sale" column="sale"/>
+        <result property="stock" column="stock"/>
+        <result property="description" column="detail_desc"/>
+        <result property="brandName" column="brand_name"/>
+        <result property="productCategoryName" column="product_category_name"/>
+        <result property="newStatus" column="new_status"/>
+        <result property="recommandStatus" column="recommand_status"/>
+        <result property="pic" column="pic"/>
+        <result property="albumPics" column="album_pics"/>
+    </resultMap>
+
+    <!-- 根据关键词搜索商品 -->
+    <select id="searchProductsByKeyword" resultMap="ProductInfoResultMap">
+        SELECT
+            p.id,
+            p.name,
+            p.sub_title,
+            p.price,
+            p.promotion_price,
+            p.sale,
+            p.stock,
+            p.detail_desc,
+            b.name AS brand_name,
+            pc.name AS product_category_name,
+            p.new_status,
+            p.recommand_status,
+            p.pic,
+            p.album_pics
+        FROM pms_product p
+        LEFT JOIN pms_brand b ON p.brand_id = b.id
+        LEFT JOIN pms_product_category pc ON p.product_category_id = pc.id
+        WHERE p.publish_status = 1
+        AND (
+            p.name LIKE CONCAT('%', #{keyword}, '%')
+            OR p.sub_title LIKE CONCAT('%', #{keyword}, '%')
+            OR b.name LIKE CONCAT('%', #{keyword}, '%')
+            OR pc.name LIKE CONCAT('%', #{keyword}, '%')
+        )
+        ORDER BY p.sale DESC, p.sort DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 根据商品ID列表查询商品 -->
+    <select id="selectProductsByIds" resultMap="ProductInfoResultMap">
+        SELECT
+            p.id,
+            p.name,
+            p.sub_title,
+            p.price,
+            p.promotion_price,
+            p.sale,
+            p.stock,
+            p.detail_desc,
+            b.name AS brand_name,
+            pc.name AS product_category_name,
+            p.new_status,
+            p.recommand_status,
+            p.pic,
+            p.album_pics
+        FROM pms_product p
+        LEFT JOIN pms_brand b ON p.brand_id = b.id
+        LEFT JOIN pms_product_category pc ON p.product_category_id = pc.id
+        WHERE p.id IN
+        <foreach collection="productIds" item="productId" open="(" separator="," close=")">
+            #{productId}
+        </foreach>
+    </select>
+
+    <!-- 获取热门商品 -->
+    <select id="getHotProducts" resultMap="ProductInfoResultMap">
+        SELECT
+            p.id,
+            p.name,
+            p.sub_title,
+            p.price,
+            p.promotion_price,
+            p.sale,
+            p.stock,
+            p.detail_desc,
+            b.name AS brand_name,
+            pc.name AS product_category_name,
+            p.new_status,
+            p.recommand_status,
+            p.pic,
+            p.album_pics
+        FROM pms_product p
+        LEFT JOIN pms_brand b ON p.brand_id = b.id
+        LEFT JOIN pms_product_category pc ON p.product_category_id = pc.id
+        WHERE p.publish_status = 1
+        ORDER BY p.sale DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 根据分类查询商品 -->
+    <select id="getProductsByCategory" resultMap="ProductInfoResultMap">
+        SELECT
+            p.id,
+            p.name,
+            p.sub_title,
+            p.price,
+            p.promotion_price,
+            p.sale,
+            p.stock,
+            p.detail_desc,
+            b.name AS brand_name,
+            pc.name AS product_category_name,
+            p.new_status,
+            p.recommand_status,
+            p.pic,
+            p.album_pics
+        FROM pms_product p
+        LEFT JOIN pms_brand b ON p.brand_id = b.id
+        LEFT JOIN pms_product_category pc ON p.product_category_id = pc.id
+        WHERE p.publish_status = 1
+        AND pc.name LIKE CONCAT('%', #{categoryName}, '%')
+        ORDER BY p.sale DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 根据价格区间查询商品 -->
+    <select id="getProductsByPriceRange" resultMap="ProductInfoResultMap">
+        SELECT
+            p.id,
+            p.name,
+            p.sub_title,
+            p.price,
+            p.promotion_price,
+            p.sale,
+            p.stock,
+            p.detail_desc,
+            b.name AS brand_name,
+            pc.name AS product_category_name,
+            p.new_status,
+            p.recommand_status,
+            p.pic,
+            p.album_pics
+        FROM pms_product p
+        LEFT JOIN pms_brand b ON p.brand_id = b.id
+        LEFT JOIN pms_product_category pc ON p.product_category_id = pc.id
+        WHERE p.publish_status = 1
+        AND p.price BETWEEN #{minPrice} AND #{maxPrice}
+        ORDER BY p.sale DESC
+        LIMIT #{limit}
+    </select>
+
+</mapper>

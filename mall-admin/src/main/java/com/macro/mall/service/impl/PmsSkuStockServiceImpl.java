@@ -26,7 +26,7 @@ public class PmsSkuStockServiceImpl implements PmsSkuStockService {
     public List<PmsSkuStock> getList(Long pid, String keyword) {
         PmsSkuStockExample example = new PmsSkuStockExample();
         PmsSkuStockExample.Criteria criteria = example.createCriteria().andProductIdEqualTo(pid);
-        if (!StringUtils.isEmpty(keyword)) {
+        if (StringUtils.hasText(keyword)) {
             criteria.andSkuCodeLike("%" + keyword + "%");
         }
         return skuStockMapper.selectByExample(example);

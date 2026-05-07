@@ -153,7 +153,7 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         PageHelper.startPage(pageNum, pageSize);
         UmsAdminExample example = new UmsAdminExample();
         UmsAdminExample.Criteria criteria = example.createCriteria();
-        if (!StringUtils.isEmpty(keyword)) {
+        if (StringUtils.hasText(keyword)) {
             criteria.andUsernameLike("%" + keyword + "%");
             example.or(example.createCriteria().andNickNameLike("%" + keyword + "%"));
         }

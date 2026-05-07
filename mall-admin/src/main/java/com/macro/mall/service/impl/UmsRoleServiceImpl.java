@@ -63,7 +63,7 @@ public class UmsRoleServiceImpl implements UmsRoleService {
     public List<UmsRole> list(String keyword, Integer pageSize, Integer pageNum) {
         PageHelper.startPage(pageNum, pageSize);
         UmsRoleExample example = new UmsRoleExample();
-        if (!StringUtils.isEmpty(keyword)) {
+        if (StringUtils.hasText(keyword)) {
             example.createCriteria().andNameLike("%" + keyword + "%");
         }
         return roleMapper.selectByExample(example);

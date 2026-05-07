@@ -137,6 +137,12 @@ mall
 - Windows环境搭建请参考：[mall-swarm项目后端开发环境搭建](https://cloud.macrozheng.com/start/mall_swarm_deploy_windows.html);
 - `mall-admin-web`项目的安装及部署请参考：[mall-swarm前端开发环境搭建](https://cloud.macrozheng.com/start/mall_swarm_deploy_windows_web.html);
 
+### Docker Desktop 后端快速部署
+
+- 仓库已提供适合 Docker Desktop 的后端编排文件：`compose.yaml`
+- MySQL 宿主机端口已调整为 `3307`
+- 初学者可直接查看教程：[`document/docker/docker-desktop-backend-setup.md`](./document/docker/docker-desktop-backend-setup.md)
+
 ## 运行效果展示
 
 - 查看注册中心注册服务信息，访问地址：http://192.168.3.101:8848/nacos/

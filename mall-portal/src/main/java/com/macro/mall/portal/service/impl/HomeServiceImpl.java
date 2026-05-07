@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -109,13 +110,14 @@ public class HomeServiceImpl implements HomeService {
             //获取当前秒杀场次
             SmsFlashPromotionSession flashPromotionSession = getFlashPromotionSession(now);
             if (flashPromotionSession != null) {
-                homeFlashPromotion.setStartTime(flashPromotionSession.getStartTime());
-                homeFlashPromotion.setEndTime(flashPromotionSession.getEndTime());
+                // 给时间加上今天的日期
+                homeFlashPromotion.setStartTime(addCurrentDate(flashPromotionSession.getStartTime()));
+                homeFlashPromotion.setEndTime(addCurrentDate(flashPromotionSession.getEndTime()));
                 //获取下一个秒杀场次
-                SmsFlashPromotionSession nextSession = getNextFlashPromotionSession(homeFlashPromotion.getStartTime());
+                SmsFlashPromotionSession nextSession = getNextFlashPromotionSession(flashPromotionSession.getStartTime());
                 if(nextSession!=null){
-                    homeFlashPromotion.setNextStartTime(nextSession.getStartTime());
-                    homeFlashPromotion.setNextEndTime(nextSession.getEndTime());
+                    homeFlashPromotion.setNextStartTime(addCurrentDate(nextSession.getStartTime()));
+                    homeFlashPromotion.setNextEndTime(addCurrentDate(nextSession.getEndTime()));
                 }
                 //获取秒杀商品
                 List<FlashPromotionProduct> flashProductList = homeDao.getFlashProductList(flashPromotion.getId(), flashPromotionSession.getId());
@@ -124,16 +126,43 @@ public class HomeServiceImpl implements HomeService {
         }
         return homeFlashPromotion;
     }
+    
+    // 给时间加上今天的日期
+    private Date addCurrentDate(Date timeOnly) {
+        if (timeOnly == null) return null;
+        Calendar result = Calendar.getInstance();
+        Calendar time = Calendar.getInstance();
+        time.setTime(timeOnly);
+        result.set(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
+        result.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
+        result.set(Calendar.SECOND, time.get(Calendar.SECOND));
+        result.set(Calendar.MILLISECOND, 0);
+        return result.getTime();
+    }
 
     //获取下一个场次信息
-    private SmsFlashPromotionSession getNextFlashPromotionSession(Date date) {
+    private SmsFlashPromotionSession getNextFlashPromotionSession(Date currentEndTime) {
         SmsFlashPromotionSessionExample sessionExample = new SmsFlashPromotionSessionExample();
         sessionExample.createCriteria()
-                .andStartTimeGreaterThan(date);
+                .andStatusEqualTo(1);
         sessionExample.setOrderByClause("start_time asc");
         List<SmsFlashPromotionSession> promotionSessionList = promotionSessionMapper.selectByExample(sessionExample);
         if (!CollectionUtils.isEmpty(promotionSessionList)) {
-            return promotionSessionList.get(0);
+            // 在 Java 层面过滤，找到第一个开始时间晚于当前结束时间的场次
+            for (SmsFlashPromotionSession session : promotionSessionList) {
+                if (currentEndTime != null && session.getStartTime() != null) {
+                    // 比较时间部分
+                    Calendar currCal = Calendar.getInstance();
+                    currCal.setTime(currentEndTime);
+                    Calendar sessionCal = Calendar.getInstance();
+                    sessionCal.setTime(session.getStartTime());
+                    if (sessionCal.get(Calendar.HOUR_OF_DAY) > currCal.get(Calendar.HOUR_OF_DAY) ||
+                        (sessionCal.get(Calendar.HOUR_OF_DAY) == currCal.get(Calendar.HOUR_OF_DAY) && 
+                         sessionCal.get(Calendar.MINUTE) > currCal.get(Calendar.MINUTE))) {
+                        return session;
+                    }
+                }
+            }
         }
         return null;
     }

@@ -19,17 +19,18 @@ services:
     command: redis-server --appendonly yes
     volumes:
       - ./mydata/redis/data:/data
+      - ./mydata/redis/log:/var/log/redis
     ports:
       - 6379:6379
   nginx:
     image: hub.rat.dev/library/nginx:1.22
     container_name: nginx
     volumes:
-      - ./mydata/nginx/conf:/etc/nginx
       - ./mydata/nginx/html:/usr/share/nginx/html
+      - ./mydata/nginx/conf:/etc/nginx/conf.d
       - ./mydata/nginx/log:/var/log/nginx
     ports:
-      - 80:80
+      - 81:80
   rabbitmq:
     image: hub.rat.dev/library/rabbitmq:3.9.11-management
     container_name: rabbitmq
@@ -50,6 +51,7 @@ services:
     volumes:
       - ./mydata/elasticsearch/plugins:/usr/share/elasticsearch/plugins
       - ./mydata/elasticsearch/data:/usr/share/elasticsearch/data
+      - ./mydata/elasticsearch/log:/usr/share/elasticsearch/logs
     ports:
       - 9200:9200
       - 9300:9300
@@ -59,7 +61,9 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - ./mydata/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./mydata/logstash/data:/usr/share/logstash/data
+      - ./mydata/logstash/log:/usr/share/logstash/logs
+      - ./mydata/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf #挂载logstash的配置文件
     depends_on:
       - elasticsearch
     links:
@@ -72,6 +76,9 @@ services:
   kibana:
     image: hub.rat.dev/library/kibana:7.17.3
     container_name: kibana
+    volumes:
+      - ./mydata/kibana/data:/usr/share/kibana/data
+      - ./mydata/kibana/log:/usr/share/kibana/logs
     links:
       - elasticsearch:es
     depends_on:
@@ -85,6 +92,7 @@ services:
     container_name: mongo
     volumes:
       - ./mydata/mongo/db:/data/db
+      - ./mydata/mongo/log:/var/log/mongodb
     ports:
       - 27017:27017
   nacos-registry:
@@ -92,5 +100,10 @@ services:
     container_name: nacos-registry
     environment:
       - "MODE=standalone"
+    volumes:
+      - ./mydata/nacos/data:/home/nacos/data
+      - ./mydata/nacos/log:/home/nacos/logs
     ports:
       - 8848:8848
+      - 9848:9848
+      - 9849:9849

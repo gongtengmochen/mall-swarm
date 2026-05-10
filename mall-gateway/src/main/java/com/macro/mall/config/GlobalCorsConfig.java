@@ -19,9 +19,13 @@ public class GlobalCorsConfig {
     public CorsWebFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedMethod("*");
+        // 允许所有来源，开发环境使用allowedOriginPatterns，生产环境建议指定具体域名
         config.addAllowedOriginPattern("*");
         config.addAllowedHeader("*");
         config.setAllowCredentials(true);
+        // 暴露响应头，让前端可以读取
+        config.addExposedHeader("Authorization");
+        config.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(new PathPatternParser());
         source.registerCorsConfiguration("/**", config);
 

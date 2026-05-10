@@ -1,5 +1,6 @@
 package com.macro.mall.ai.config;
 
+import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author macro
  */
 @Configuration
+@EnableKnife4j
 public class SpringDocConfig implements WebMvcConfigurer {
 
     @Bean

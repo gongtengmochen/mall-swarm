@@ -1,0 +1,26 @@
+1.打开docker设置，点击Docker Engine
+2.复制下面代码，覆盖掉Docker Engine里面的代码
+------------------------------------------------------
+{
+  "registry-mirrors": [
+    "https://docker.m.daocloud.io",
+    "https://mirror.baidubce.com",
+    "https://hub-mirror.c.163.com",
+    "https://dockerproxy.com"
+  ],
+  "dns": [
+    "114.114.114.114",
+    "8.8.8.8",
+    "223.5.5.5"
+  ],
+  "builder": {
+    "gc": {
+      "defaultKeepStorage": "20GB",
+      "enabled": true
+    }
+  },
+  "experimental": false
+}
+----------------------------------------------------------
+3.E:\大学课程\软件工程\xiangmu\mall-swarm\document\docker在这个路径打开powershell
+4.

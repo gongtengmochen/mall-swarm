@@ -1,14 +1,84 @@
 spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: mall-auth
+          uri: lb://mall-auth
+          predicates:
+            - Path=/mall-auth/**
+          filters:
+            - StripPrefix=1
+        - id: mall-admin
+          uri: lb://mall-admin
+          predicates:
+            - Path=/mall-admin/**
+          filters:
+            - StripPrefix=1
+        - id: mall-portal
+          uri: lb://mall-portal
+          predicates:
+            - Path=/mall-portal/**
+          filters:
+            - StripPrefix=1
+        - id: mall-search
+          uri: lb://mall-search
+          predicates:
+            - Path=/mall-search/**
+          filters:
+            - StripPrefix=1
+        - id: mall-demo
+          uri: lb://mall-demo
+          predicates:
+            - Path=/mall-demo/**
+          filters:
+            - StripPrefix=1
+        - id: mall-ai
+          uri: lb://mall-ai
+          predicates:
+            - Path=/mall-ai/**
+          # 注意：不使用 StripPrefix，因为 Controller 的路径是 /ai/guide
+          # 这样 /mall-ai/ai/guide/chat 会被转发为 /ai/guide/chat
   data:
     redis:
-      host: localhost # Redis服务器地址
-      database: 0 # Redis数据库索引（默认为0）
-      port: 6379 # Redis服务器连接端口
-      password: # Redis服务器连接密码（默认为空）
-      timeout: 3000ms # 连接超时时间（毫秒）
+      host: localhost
+      database: 0
+      port: 6379
+      password:
+      timeout: 3000ms
+
+secure:
+  ignore:
+    urls:
+      - "/doc.html"
+      - "/v3/api-docs/swagger-config"
+      - "/*/v3/api-docs/default"
+      - "/*/v3/api-docs"
+      - "/*/swagger-ui/**"
+      - "/webjars/**"
+      - "/favicon.ico"
+      - "/actuator/**"
+      - "/mall-auth/**"
+      - "/mall-search/**"
+      - "/mall-portal/sso/login"
+      - "/mall-portal/sso/register"
+      - "/mall-portal/sso/getAuthCode"
+      - "/mall-portal/home/**"
+      - "/mall-portal/product/**"
+      - "/mall-portal/brand/**"
+      - "/mall-portal/alipay/**"
+      - "/mall-admin/admin/login"
+      - "/mall-admin/admin/register"
+      - "/mall-admin/minio/upload"
+      - "/mall-ai/**"
+
 logging:
   level:
     root: info
     com.macro.mall: debug
+
 logstash:
   host: localhost

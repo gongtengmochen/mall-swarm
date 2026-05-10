@@ -1,0 +1,193 @@
+{
+  "info": {
+    "name": "mall-ai API Tests",
+    "description": "mall-ai模块的API接口测试集合（通过Gateway网关访问）",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "AI对话（非流式）",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": 1,\n  \"sessionId\": \"session_001\",\n  \"message\": \"我想买一部手机，预算3000元左右，有什么推荐吗？\",\n  \"stream\": false\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8201/mall-ai/ai/guide/chat",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8201",
+          "path": ["mall-ai", "ai", "guide", "chat"]
+        },
+        "description": "普通对话接口，返回完整的AI回复和推荐商品列表"
+      }
+    },
+    {
+      "name": "AI对话（流式输出）",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "text/event-stream"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": 1,\n  \"sessionId\": \"session_002\",\n  \"message\": \"推荐一款适合程序员的机械键盘\",\n  \"stream\": true\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8201/mall-ai/ai/guide/stream",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8201",
+          "path": ["mall-ai", "ai", "guide", "stream"]
+        },
+        "description": "流式对话接口，使用SSE实时输出AI回复内容"
+      }
+    },
+    {
+      "name": "商品咨询",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": 1,\n  \"sessionId\": \"session_003\",\n  \"message\": \"华为Mate60的价格是多少？\",\n  \"stream\": false\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8201/mall-ai/ai/guide/chat",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8201",
+          "path": ["mall-ai", "ai", "guide", "chat"]
+        },
+        "description": "咨询具体商品信息，AI会基于真实商品数据回答"
+      }
+    },
+    {
+      "name": "多轮对话（第一轮）",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": 1,\n  \"sessionId\": \"session_004\",\n  \"message\": \"我想看看笔记本电脑\",\n  \"stream\": false\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8201/mall-ai/ai/guide/chat",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8201",
+          "path": ["mall-ai", "ai", "guide", "chat"]
+        },
+        "description": "多轮对话的第一轮，建立会话上下文"
+      }
+    },
+    {
+      "name": "多轮对话（第二轮）",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": 1,\n  \"sessionId\": \"session_004\",\n  \"message\": \"有没有性价比高的游戏本？\",\n  \"stream\": false\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8201/mall-ai/ai/guide/chat",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8201",
+          "path": ["mall-ai", "ai", "guide", "chat"]
+        },
+        "description": "多轮对话的第二轮，使用相同的sessionId保持上下文"
+      }
+    },
+    {
+      "name": "获取热门商品",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8201/mall-ai/ai/guide/hot-products?limit=10",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8201",
+          "path": ["mall-ai", "ai", "guide", "hot-products"],
+          "query": [
+            {
+              "key": "limit",
+              "value": "10",
+              "description": "返回商品数量限制"
+            }
+          ]
+        },
+        "description": "获取热门商品推荐列表"
+      }
+    },
+    {
+      "name": "AI对话（直接访问服务）",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": 1,\n  \"sessionId\": \"session_005\",\n  \"message\": \"你好，请介绍一下你自己\",\n  \"stream\": false\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8094/ai/guide/chat",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8094",
+          "path": ["ai", "guide", "chat"]
+        },
+        "description": "直接访问mall-ai服务（开发调试用），生产环境应通过Gateway访问"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "gateway_url",
+      "value": "http://localhost:8201",
+      "type": "string",
+      "description": "Gateway网关地址"
+    },
+    {
+      "key": "service_url",
+      "value": "http://localhost:8094",
+      "type": "string",
+      "description": "mall-ai服务地址（开发调试用）"
+    }
+  ]
+}

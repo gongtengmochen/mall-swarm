@@ -58,6 +58,7 @@ public class SmsFlashPromotionSessionServiceImpl implements SmsFlashPromotionSes
     @Override
     public List<SmsFlashPromotionSession> list() {
         SmsFlashPromotionSessionExample example = new SmsFlashPromotionSessionExample();
+        example.setOrderByClause("start_time asc");
         return promotionSessionMapper.selectByExample(example);
     }
 
@@ -65,7 +66,7 @@ public class SmsFlashPromotionSessionServiceImpl implements SmsFlashPromotionSes
     public List<SmsFlashPromotionSessionDetail> selectList(Long flashPromotionId) {
         List<SmsFlashPromotionSessionDetail> result = new ArrayList<>();
         SmsFlashPromotionSessionExample example = new SmsFlashPromotionSessionExample();
-        example.createCriteria().andStatusEqualTo(1);
+        example.setOrderByClause("start_time asc");
         List<SmsFlashPromotionSession> list = promotionSessionMapper.selectByExample(example);
         for (SmsFlashPromotionSession promotionSession : list) {
             SmsFlashPromotionSessionDetail detail = new SmsFlashPromotionSessionDetail();

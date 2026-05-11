@@ -1,0 +1,49 @@
+server:
+  port: 8094
+
+spring:
+  application:
+    name: mall-ai
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+  datasource:
+    url: jdbc:mysql://localhost:3306/mall?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # Spring AI Alibaba 配置
+  ai:
+    dashscope:
+      api-key: ${AI_DASHSCOPE_API_KEY:sk-9d5c65f97a184e17a08e88a6de17c097}
+      chat:
+        options:
+          model: qwen-plus
+          temperature: 0.7
+          max-completion-tokens: 2000
+
+# MyBatis配置
+mybatis:
+  mapper-locations:
+    - classpath:mapper/*.xml
+    - classpath*:com/**/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+# AI智能导购业务配置
+mall:
+  ai:
+    enable-stream: true
+    max-history-size: 10
+    rag-top-k: 5
+    api-timeout: 30000
+    max-retries: 3
+    rate-limit-qps: 10
+
+# 日志配置
+logging:
+  level:
+    com.macro.mall.ai: debug
+    com.alibaba.cloud.ai: info

@@ -32,7 +32,6 @@ services:
       - ./mydata/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./mydata/nginx/conf.d:/etc/nginx/conf.d
       - ./mydata/nginx/html:/usr/share/nginx/html
-      - ./mydata/nginx/conf:/etc/nginx/conf.d
       - ./mydata/nginx/log:/var/log/nginx
     ports:
       - 81:80

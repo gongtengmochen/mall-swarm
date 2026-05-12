@@ -19,6 +19,7 @@
         <module>mall-monitor</module>
         <module>mall-gateway</module>
         <module>mall-auth</module>
+        <module>mall-ai</module>
     </modules>
 
     <parent>
@@ -33,11 +34,14 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skipTests>true</skipTests>
         <docker.host>http://192.168.3.101:2375</docker.host>
+        <docker.skip>true</docker.skip>
         <docker.maven.plugin.version>0.43.3</docker.maven.plugin.version>
         <java.version>17</java.version>
         <spring-boot.version>3.2.2</spring-boot.version>
         <spring-cloud.version>2023.0.1</spring-cloud.version>
         <spring-cloud-alibaba.version>2023.0.1.0</spring-cloud-alibaba.version>
+        <spring-ai-alibaba.version>1.0.0-M3.2</spring-ai-alibaba.version>
+        <lombok.version>1.18.30</lombok.version>
         <pagehelper-starter.version>2.1.0</pagehelper-starter.version>
         <pagehelper.version>6.1.0</pagehelper.version>
         <druid.version>1.2.9</druid.version>
@@ -242,6 +246,12 @@
                 <artifactId>sa-token-jwt</artifactId>
                 <version>${sa-token.version}</version>
             </dependency>
+            <!-- Spring AI Alibaba -->
+            <dependency>
+                <groupId>com.alibaba.cloud.ai</groupId>
+                <artifactId>spring-ai-alibaba-starter</artifactId>
+                <version>${spring-ai-alibaba.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -268,6 +278,7 @@
                         </execution>
                     </executions>
                     <configuration>
+                        <skip>${docker.skip}</skip>
                         <!-- Docker 远程管理地址-->
                         <dockerHost>${docker.host}</dockerHost>
                         <images>
@@ -308,6 +319,13 @@
                     <compilerArgs>
                         <arg>-parameters</arg>
                     </compilerArgs>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
         </plugins>
@@ -325,6 +343,15 @@
             <name>central2</name>
             <url>https://repo1.maven.org/maven2/</url>
         </repository>
+        <!-- Spring Milestones 仓库，用于获取 Spring AI 相关依赖 -->
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 
     <!--使用aliyun的镜像源提升插件下载速度-->
@@ -338,6 +365,15 @@
             <id>central2</id>
             <name>central2</name>
             <url>https://repo1.maven.org/maven2/</url>
+        </pluginRepository>
+        <!-- Spring Milestones 仓库，用于获取 Spring AI 相关插件 -->
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </pluginRepository>
     </pluginRepositories>
 

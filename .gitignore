@@ -10,11 +10,18 @@ target/
 .classpath
 .project
 
-# Docker 数据目录
+# Docker 中间件挂载数据
+# 1. 先忽略整个 mydata 目录（黑名单）
 document/docker/mydata/
-*.sock
-*.log
-*.pid
-*.lock
-WiredTiger
-*.db
+
+# 2. 再放行需要提交的配置文件（白名单，! 代表「不忽略」）
+!document/docker/mydata/logstash/logstash.conf
+!document/docker/mydata/nginx/nginx.conf
+!document/docker/mydata/elasticsearch/.gitkeep
+
+# 敏感配置文件（包含 API Key 等）
+application-local.yml
+.env
+*.key
+*.pem
+*.secret

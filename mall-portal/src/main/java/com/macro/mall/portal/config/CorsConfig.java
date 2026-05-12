@@ -1,12 +1,16 @@
 package com.macro.mall.portal.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
+// import org.springframework.context.annotation.Bean;
+// import org.springframework.context.annotation.Configuration;
+// import org.springframework.web.cors.CorsConfiguration;
+// import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+// import org.springframework.web.filter.CorsFilter;
 
-@Configuration
+/**
+ * CORS配置已移至网关层统一管理
+ * 微服务内部不需要重复配置,避免CORS头部重复设置
+ * 
+ * @Configuration
 public class CorsConfig {
 
     @Bean
@@ -23,3 +27,4 @@ public class CorsConfig {
         return new CorsFilter(source);
     }
 }
+ */

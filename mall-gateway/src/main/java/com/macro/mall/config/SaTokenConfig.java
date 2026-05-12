@@ -88,7 +88,6 @@ public class SaTokenConfig {
         ServerWebExchange exchange = SaReactorSyncHolder.getContext();
         HttpHeaders headers = exchange.getResponse().getHeaders();
         headers.set("Content-Type", "application/json; charset=utf-8");
-        headers.set("Access-Control-Allow-Origin", "*");
         headers.set("Cache-Control","no-cache");
         CommonResult result = null;
         if(e instanceof NotLoginException){
